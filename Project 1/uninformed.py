@@ -10,7 +10,7 @@ solution = (1, 2, 3, 4, 5, 6, 7, 8, 0)
 # 7 8 _
 
 class Puzzle :
-  grids = {}
+  #grids = {}
   # list address 
   # 0 1 2
   # 3 4 5
@@ -42,7 +42,7 @@ class Puzzle :
     self.depth = dep
     self.blank = puzz.index(0)
     self.kids = Puzzle.getOffspring(self)
-    Puzzle.grids
+    #Puzzle.grids
 
 # Swap the piece at loc + d with the blank. loc = blank's current location
 def move(loc, puzzle, d) : 
@@ -64,6 +64,7 @@ def children(parent) :
     if kid.state in Puzzle.grids :
       if Puzzle.grids[kid.state].depth > depth :
         Puzzle.grids[kid.state] = parent
+        kiddies.append(kid)
     else :
       Puzzle.grids[kid.state] = parent
       kiddies.append(kid)
@@ -138,22 +139,19 @@ def depth_limited(start, limit) :
   i = 0
   if limit == -1:
     limit = 500000
-  while i < limit :
+  while i < 500000 :
     i += 1
+    #print state.depth,
     if is_goal(state) :
       return (True, i) # Found the goal, this many nodes searched
-      #print "nodes searched =", i
-      #return True
     else :
       kids = children(state)
       for kid in kids :
-        #if kid.depth < 40 : # Only look at a kid if it has less than 40 depth? 
+        if kid.depth < limit : # Only look at a kid if it has less than 40 depth? 
         # This was taking 17566 nodes to find the solution, without it it takes 12740 nodes
           stack.append(kid)
     if not stack :
       return (False, i) # Did not find the goal, this many nodes searched
-      #print "Nodes searched =", i
-      #return False
     state = stack.pop()
   return (False, limit)
     
@@ -191,6 +189,7 @@ def bidirectional(start, end):
       if kid.state in grid :
         if grid[kid.state].depth > depth :
           grid[kid.state] = parent
+          kiddies.append(kid)
       else :
         grid[kid.state] = parent
         kiddies.append(kid)
@@ -272,6 +271,7 @@ def bidirectional(start, end):
 # Run the tests    
 
 test = (0, 1, 3, 5, 7, 8, 6, 4, 2)
+Puzzle.grids = {}
 #visited = {test:None}
 
 # Start Breadth First Search
@@ -292,7 +292,7 @@ Puzzle.grids = {}
 
 # Start Depth First Search
 start = time.time()
-success, nodes = depth(test) 
+success, nodes = depth_limited(test, 100000) 
 if success:
   end = time.time()
   print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
@@ -308,7 +308,7 @@ Puzzle.grids = {}
 
 # Start Depth Limited Search
 start = time.time()
-success, nodes = depth_limited(test, -1)
+success, nodes = depth_limited(test, 21)
 end = time.time()
 if success:
   print "Depth Limited solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
@@ -322,15 +322,15 @@ del Puzzle.grids
 Puzzle.grids = {}
 
 # Start Iterative Deepening Search
-#start = time.time()
-#success, nodes = iterative(test, -1)
-#end = time.time()
-#if success:
-#  print "Iterative Deepening solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
-#  if printMoves:
-#    display(Puzzle.grids[solution], 100)
-#else :
-#  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+start = time.time()
+success, nodes = iterative(test, -1)
+end = time.time()
+if success:
+  print "Iterative Deepening solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
+  if printMoves:
+    display(Puzzle.grids[solution], 100)
+else :
+  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
 
 
 #clean up
