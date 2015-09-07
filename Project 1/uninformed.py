@@ -218,16 +218,15 @@ def bidirectional(start, end):
         depthOfStart = startGrid[key].depth
         depthOfEnd = endGrid[key].depth
         endTree = key
-        while not endGrid[endTree].depth == 0:
+        while not endTree == solution:
           #print "endGrid[endTree].depth: %s"%endGrid[endTree].depth
           Puzzle.grids[endTree] = endGrid[endTree]
-          Puzzle.grids[endTree].depth = depthOfStart + (depthOfEnd - endGrid[endTree].depth)
+          Puzzle.grids[endTree].depth = depthOfStart + (depthOfEnd - endGrid[endTree].depth) +1
+          
           endTree = endGrid[endTree].state
         Puzzle.grids[endTree] = endGrid[endTree]
         Puzzle.grids[endTree].depth = depthOfStart + (depthOfEnd - endGrid[endTree].depth)
         
-        if solution in Puzzle.grids:
-          print "Solution in the end"
         
         return
   
