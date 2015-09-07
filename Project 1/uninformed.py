@@ -53,18 +53,18 @@ def move(loc, puzzle, d) :
   return child
 
 # Get all the children of a possible puzzle state 
-def children(p) :
-  space = p.blank
-  puzzle = p.state
-  d = p.depth + 1
+def children(parent) :
+  space = parent.blank
+  puzzle = parent.state
+  depth = parent.depth + 1
   kiddies = []
-  for child in p.kids :
-    kid = Puzzle(move(space, puzzle, child), d)
+  for child in parent.kids :
+    kid = Puzzle(move(space, puzzle, child), depth) # Create a new puzzle for each kid
     if kid.state in Puzzle.grids :
-      if Puzzle.grids[kid.state].depth > d :
-        Puzzle.grids[kid.state] = p
+      if Puzzle.grids[kid.state].depth > depth :
+        Puzzle.grids[kid.state] = parent
     else :
-      Puzzle.grids[kid.state] = p
+      Puzzle.grids[kid.state] = parent
       kiddies.append(kid)
   return kiddies
 
@@ -78,6 +78,13 @@ def display(p, max) :
   print p.state[0:3]
   print p.state[3:6]
   print p.state[6:]
+
+# Get the number of moves taken to reach the goal  
+def getMoves(p, max) :
+  if p.depth is 0 or max is 0:
+    return 1
+  else :
+    return getMoves(Puzzle.grids[p.state], max - 1) + 1
 
 # Are we there yet?
 def is_goal(state) :
@@ -196,7 +203,7 @@ start = time.time()
 success, nodes = breadth(test)
 if success:
   end = time.time()
-  print "BFS solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  print "BFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
   #display(Puzzle.grids[solution], 100)
 else :
   end = time.time()
@@ -211,7 +218,7 @@ start = time.time()
 success, nodes = depth(test) 
 if success:
   end = time.time()
-  print "DFS solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
   #display(Puzzle.grids[solution], 100)
 else :
   end = time.time()
@@ -226,25 +233,25 @@ start = time.time()
 success, nodes = depth_limited(test, -1)
 end = time.time()
 if success:
-  print "Depth Limited solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  print "Depth Limited solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
   #display(Puzzle.grids[solution], 100)
 else :
   print "Depth Limited failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
   
 #clean up
-#del Puzzle.grids
-#Puzzle.grids = {}
-#
+del Puzzle.grids
+Puzzle.grids = {}
+
 # Start Iterative Deepening Search
-#start = time.time()
-#success, nodes = iterative(test, -1)
-#end = time.time()
-#if success:
-#  print "Iterative Deepening solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
-#  #display(Puzzle.grids[solution], 100)
-#else :
-#  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-#
+start = time.time()
+success, nodes = iterative(test, -1)
+end = time.time()
+if success:
+  print "Iterative Deepening solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
+  #display(Puzzle.grids[solution], 100)
+else :
+  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+
 
 #clean up
 del Puzzle.grids
@@ -255,7 +262,7 @@ start = time.time()
 success, nodes = bidirectional(test, solution)
 end = time.time()
 if success:
-  print "Bi-Directional solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  print "Bi-Directional solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], 100))
   #display(Puzzle.grids[solution], 100)
 else :
   print "Bi-Directional failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
