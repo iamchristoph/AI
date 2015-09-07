@@ -119,40 +119,65 @@ def depth(start) :
     state = stack.pop()
 
 # Depth limited search
-def depth_limited(start) :
+def depth_limited(start, limit) :
   stack = deque()
   state = Puzzle(start, 0)
   i = 0
-  while i < 500000 :
+  if limit == -1:
+    limit = 500000
+  while i < limit :
     i += 1
     if is_goal(state) :
-      print "nodes searched =", i
-      return True
+      return (True, i) # Found the goal, this many nodes searched
+      #print "nodes searched =", i
+      #return True
     else :
       kids = children(state)
       for kid in kids :
-        if kid.depth < 40 :
+        #if kid.depth < 40 : # Only look at a kid if it has less than 40 depth? 
+        # This was taking 17566 nodes to find the solution, without it it takes 12740 nodes
           stack.append(kid)
     if not stack :
-      print "Nodes searched =", i
-      return False
+      return (False, i) # Did not find the goal, this many nodes searched
+      #print "Nodes searched =", i
+      #return False
     state = stack.pop()
-
+  return (False, limit)
+    
+# Iterative Deepening search
+def iterative(start, limit):
+  if limit == -1:
+    limit = 500000
+  
+  #returned = depth_limited(start, 12739)
+  #print returned
+  #exit()
+  for i in range(1, limit+1):
+    returned = depth_limited(start, i)
+    success, nodes = returned
+    if success:
+      return (success, nodes)
+    #clean up
+    del Puzzle.grids
+    Puzzle.grids = {}
+      
+  return (False, limit)
+  
 # ---------------------------------------------------------------------------
 # Run the tests    
 
 test = (0, 1, 3, 5, 7, 8, 6, 4, 2)
-visited = {test:None}
+#visited = {test:None}
 
 # Start Breadth First Search
 start = time.time()
 if breadth(test) :
   end = time.time()
   print "BFS solution found! Solution found in %s seconds."%(end - start)
-  display(Puzzle.grids[solution], 100)
+  #display(Puzzle.grids[solution], 100)
 else :
   end = time.time()
-  print "Failed to find solution. Ran for %s seconds."%(end - start)
+  print "BFS failed to find solution. Ran for %s seconds."%(end - start)
 
 #clean up
 del Puzzle.grids
@@ -163,10 +188,10 @@ start = time.time()
 if depth(test) :
   end = time.time()
   print "DFS solution found! Solution found in %s seconds."%(end - start)
-  display(Puzzle.grids[solution], 100)
+  #display(Puzzle.grids[solution], 100)
 else :
   end = time.time()
-  print "Failed to find solution. Ran for %s seconds."%(end - start)
+  print "DFS failed to find solution. Ran for %s seconds."%(end - start)
 
 #clean up
 del Puzzle.grids
@@ -174,11 +199,24 @@ Puzzle.grids = {}
 
 # Start Depth Limited Search
 start = time.time()
-if depth_limited(test) :
-  end = time.time()
-  print "Depth Limited solution found! Solution found in %s seconds."%(end - start)
-  display(Puzzle.grids[solution], 100)
+success, nodes = depth_limited(test, -1)
+end = time.time()
+if success:
+  print "Depth Limited solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  #display(Puzzle.grids[solution], 100)
 else :
-  end = time.time()
-  print "Failed to find solution. Ran for %s seconds."%(end - start)
+  print "Depth Limited failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
   
+#clean up
+del Puzzle.grids
+Puzzle.grids = {}
+
+# Start Iterative Deepening Search
+start = time.time()
+success, nodes = iterative(test, -1)
+end = time.time()
+if success:
+  print "Iterative Deepening solution found! Solution found in %s seconds after searching %s nodes"%(end - start, nodes)
+  #display(Puzzle.grids[solution], 100)
+else :
+  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
