@@ -1,3 +1,23 @@
 README
 
-This is for the development of projects for artificial intelligence course.
+Instructions on use:
+ python uninformed.py <optional file name>
+
+If a file name is not provided, the following will be used instead:
+
+test = (0, 1, 3, 5, 7, 8, 6, 4, 2) 
+
+_13
+578
+642
+
+The default is to print the last 100 moves of a valid solution. However, depth limited 
+search is limited to 21 moves. There is currently no a command line option to change 
+these default values. If changes are desired you must look in uninformed.py
+
+The solution is set to (1, 2, 3, 4, 5, 6, 7, 8, 0) 
+# 1 2 3
+# 4 5 6
+# 7 8 _
+
+Again this can only be changed by looking in uninformed.py
