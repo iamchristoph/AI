@@ -1,21 +1,38 @@
-# uninformed search
-# uninformed.py
-# Project by Christopher Terry and Travis Smith
-
 import time
 import sys
 from collections import deque
 
-printMoves = False 
-maximumMovesToShow = 100
-depthLimitedCap = 21
-test = (0, 1, 3, 5, 7, 8, 6, 4, 2) # If you want to test manually without a file. This will be overwritten by a filename in the command line
+# -------------------------------------------------
+# Project by Christopher Terry and Travis Smith
+# -------------------------------------------------
 
-# Shouldn't need to alter
+# Instructions on use:
+#   python uninformed.py <optional file name>
+#
+# If a file name is not provided, the following will be used instead:
+test = (0, 1, 3, 5, 7, 8, 6, 4, 2) 
+# _13
+# 578
+# 642
+
+# True will print out all of the moves taken, while False will not show them. False is very useful for just seeing the program's report
+printMoves = True 
+# Set to a different number to try a different limit for Depth Limited Search
+depthLimitedCap = 21 
+# If you want 
+maximumMovesToShow = 100 
+
+# Shouldn't need to alter, but provided as a config option none the less
 solution = (1, 2, 3, 4, 5, 6, 7, 8, 0) # Option to re-arrange the way the solution is formatted
 # 1 2 3
 # 4 5 6
 # 7 8 _
+
+# -------------------------------------------------
+#   End of Config Options
+# -------------------------------------------------
+
+
 
 # Read a filename, if any, provided on the command line
 if len(sys.argv) > 1:
