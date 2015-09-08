@@ -3,7 +3,7 @@
 import time
 from collections import deque
 
-printMoves = False
+printMoves = True
 solution = (1, 2, 3, 4, 5, 6, 7, 8, 0) 
 # 1 2 3
 # 4 5 6
@@ -212,20 +212,17 @@ def bidirectional(start, end):
         while not startGrid[startTree].depth == 0:
           Puzzle.grids[startTree] = startGrid[startTree]
           startTree = startGrid[startTree].state
+          
         Puzzle.grids[startTree] = startGrid[startTree]
         
         depthOfStart = startGrid[key].depth
         depthOfEnd = endGrid[key].depth
         endTree = key
-        while not endTree == solution:
-          #print "endGrid[endTree].depth: %s"%endGrid[endTree].depth
-          Puzzle.grids[endTree] = endGrid[endTree]
-          Puzzle.grids[endTree].depth = depthOfStart + (depthOfEnd - endGrid[endTree].depth) +1
+        while not endTree == solution:  
+          # Needs to convert the endTree's child state -> parent puzzle into parent state -> child puzzle
+          Puzzle.grids[endGrid[endTree].state] = Puzzle(endTree, depthOfStart + (depthOfEnd - endGrid[endTree].depth) +1)
           
           endTree = endGrid[endTree].state
-        Puzzle.grids[endTree] = endGrid[endTree]
-        Puzzle.grids[endTree].depth = depthOfStart + (depthOfEnd - endGrid[endTree].depth)
-        
         
         return
   
@@ -286,6 +283,7 @@ else :
   end = time.time()
   print "BFS failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
 
+  
 #clean up
 del Puzzle.grids
 Puzzle.grids = {}
