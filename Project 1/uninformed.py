@@ -120,7 +120,7 @@ def display(p, max) :
     pass
   else :
     display(Puzzle.grids[p.state], max - 1)
-  print "depth =", p.depth
+  print "moves =", p.depth
   print p.state[0:3]
   print p.state[3:6]
   print p.state[6:]
@@ -339,7 +339,7 @@ start = time.time()
 success, nodes = depth_limited(originalPuzzle, 100000) 
 if success:
   end = time.time()
-  print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
+  print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
   if printMoves:
     display(Puzzle.grids[solution], maximumMovesToShow)
 else :
