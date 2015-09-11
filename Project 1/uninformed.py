@@ -20,7 +20,7 @@ printMoves = True
 # Set to a different number to try a different limit for Depth Limited Search
 depthLimitedCap = 21 
 # If you want 
-maximumMovesToShow = 100 
+maximumMovesToShow = 31 
 
 # Shouldn't need to alter, but provided as a config option none the less
 solution = (1, 2, 3, 4, 5, 6, 7, 8, 0) # Option to re-arrange the way the solution is formatted
@@ -309,6 +309,25 @@ def bidirectional(start, end):
   return (False, i)
   
 # ---------------------------------------------------------------------------
+# Heuristics
+from math import ceil
+
+def h1(grid) :
+  value = 0
+  for num in grid :
+    i = grid.index(num) + 1
+    if num is 0 :
+      num = 9
+    upDnMoves = abs(-(-num/3) - (-(-i//3)))
+    x = i%3
+    x = x if x else 3
+    y = num%3
+    y = y if y else 3
+    lrMoves = abs(y - x)
+    value += upDnMoves + lrMoves
+  return value
+
+# ---------------------------------------------------------------------------
 # Run the tests    
 
 
@@ -391,3 +410,11 @@ if success:
     display(Puzzle.grids[solution], maximumMovesToShow)
 else :
   print "Bi-Directional failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+
+#clean up
+del Puzzle.grids
+Puzzle.grids = {}
+
+#test heuristic value
+
+print h1(originalPuzzle)
