@@ -16,7 +16,7 @@ test = (0, 1, 3, 5, 7, 8, 6, 4, 2)
 # 642
 
 # True will print out all of the moves taken, while False will not show them. False is very useful for just seeing the program's report
-printMoves = True 
+printMoves = False 
 # Set to a different number to try a different limit for Depth Limited Search
 depthLimitedCap = 21 
 # If you want 
@@ -88,6 +88,12 @@ class Puzzle :
     self.kids = Puzzle.getOffspring(self)
     #Puzzle.grids
 
+  #clean up
+  def cleanUp() :
+    if Puzzle.grids :
+      del Puzzle.grids
+    Puzzle.grids = {}
+
 # Swap the piece at loc + d with the blank. loc = blank's current location
 def move(loc, puzzle, d) : 
   moved = puzzle[loc + d]
@@ -146,7 +152,6 @@ def breadth(start) :
   while i < 50000 :
     i += 1
     if is_goal(state) :
-      #print "nodes searched = ", i
       return (True, i)
     else :
       kids = children(state)
@@ -307,12 +312,13 @@ def bidirectional(start, end):
     endState = endQueue.popleft()
     
   return (False, i)
-  
+
+# Informed Searces ----------------------------------------------------------  
 # ---------------------------------------------------------------------------
 # Heuristics
 from math import ceil
 
-def h1(grid) :
+def manhattan(grid) :
   value = 0
   for num in grid :
     i = grid.index(num) + 1
@@ -326,6 +332,33 @@ def h1(grid) :
     lrMoves = abs(y - x)
     value += upDnMoves + lrMoves
   return value
+
+# A* search
+def aStar(start, heuristic, useD) :
+  def gethValue(node, useDepth) :
+      if useDepth :
+        node.hValue = heuristic(node.state) + node.depth
+      else :
+        node.hValue = heuristic(node.state)
+  queue = []
+  state = Puzzle(start, 0)
+  gethValue(state, useD)
+  i = 0
+  while i < 50000 :
+    i += 1
+    if is_goal(state) :
+      return (True, i)
+    else :
+      kids = children(state)
+      for kid in kids :
+        gethValue(kid, useD)
+        queue.append(kid)
+      queue.sort(key= lambda x : x.hValue)
+      #print [x.hValue for x in queue]
+    if not queue :
+      return (False, i)
+    state = queue.pop(0)
+  return (False, i)
 
 # ---------------------------------------------------------------------------
 # Run the tests    
@@ -415,6 +448,27 @@ else :
 del Puzzle.grids
 Puzzle.grids = {}
 
-#test heuristic value
+# Greedy
+start = time.time()
+success, nodes = aStar(originalPuzzle, manhattan, 0)
+end = time.time()
+if success :
+  print "Greedy solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  if printMoves :
+    display(Puzzle.grids[solution], maximumMovesToShow)
+else :
+  print "Greedy failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
 
-print h1(originalPuzzle)
+del Puzzle.grids
+Puzzle.grids = {}
+
+# A*
+start = time.time()
+success, nodes = aStar(originalPuzzle, manhattan, 1)
+end = time.time()
+if success :
+  print "A* solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  if printMoves :
+    display(Puzzle.grids[solution], maximumMovesToShow)
+else :
+  print "A* failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
