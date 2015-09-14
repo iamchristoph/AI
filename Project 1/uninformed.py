@@ -333,6 +333,27 @@ def manhattan(grid) :
     value += upDnMoves + lrMoves
   return value
 
+
+def customHeuristic1(grid):
+  value = 0
+  for i in range(len(grid)):
+    piece = grid[i]
+    # We don't care where the blank tile is, since it's needed to move other pieces
+    if (i+1) == piece or (piece == 0):
+      value += 0 # the piece is in the right place
+    else:
+      goalIndex = piece -1
+      goalIndex = goalIndex if goalIndex >=0 else 8
+      
+      # Essentially checks for if they're in different rows and columns
+      x = abs((goalIndex/3) - (i/3))
+      y = abs((goalIndex %3) - (i%3))
+      
+      distance = x+y
+      value += distance**2
+  
+  return value
+  
 # A* search
 def aStar(start, heuristic, useD) :
   def gethValue(node, useDepth) :
@@ -340,6 +361,7 @@ def aStar(start, heuristic, useD) :
         node.hValue = heuristic(node.state) + node.depth
       else :
         node.hValue = heuristic(node.state)
+        
   queue = []
   state = Puzzle(start, 0)
   gethValue(state, useD)
@@ -360,115 +382,145 @@ def aStar(start, heuristic, useD) :
     state = queue.pop(0)
   return (False, i)
 
-# ---------------------------------------------------------------------------
-# Run the tests    
-
-
-
+# ---------------------------------------------------------------------------  
+# Uninformed Searches Commented Out
+#
+#originalPuzzle = test
+#
+#Puzzle.grids = {}
+#
+## Start Breadth First Search
+#start = time.time()
+#success, nodes = breadth(originalPuzzle)
+#if success:
+#  end = time.time()
+#  print "BFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
+#  if printMoves:
+#    display(Puzzle.grids[solution], maximumMovesToShow)
+#else :
+#  end = time.time()
+#  print "BFS failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+#
+#  
+##clean up
+#del Puzzle.grids
+#Puzzle.grids = {}
+#
+## Start Depth First Search
+#start = time.time()
+#success, nodes = depth_limited(originalPuzzle, 100000) 
+#if success:
+#  end = time.time()
+#  print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+#  if printMoves:
+#    display(Puzzle.grids[solution], maximumMovesToShow)
+#else :
+#  end = time.time()
+#  print "DFS failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+#
+##clean up
+#del Puzzle.grids
+#Puzzle.grids = {}
+#
+## Start Depth Limited Search
+#start = time.time()
+#success, nodes = depth_limited(originalPuzzle, depthLimitedCap)
+#end = time.time()
+#if success:
+#  print "Depth Limited solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
+#  if printMoves:
+#    display(Puzzle.grids[solution], maximumMovesToShow)
+#else :
+#  print "Depth Limited failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+#  
+##clean up
+#del Puzzle.grids
+#Puzzle.grids = {}
+#
+## Start Iterative Deepening Search
+#start = time.time()
+#success, nodes = iterative(originalPuzzle, -1)
+#end = time.time()
+#if success:
+#  print "Iterative Deepening solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
+#  if printMoves:
+#    display(Puzzle.grids[solution], maximumMovesToShow)
+#else :
+#  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+#
+#
+##clean up
+#del Puzzle.grids
+#Puzzle.grids = {}
+#
+## Bi-Directional Search
+#start = time.time()
+#success, nodes = bidirectional(originalPuzzle, solution)
+#end = time.time()
+#if success:
+#  print "Bi-Directional solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
+#  if printMoves:
+#    display(Puzzle.grids[solution], maximumMovesToShow)
+#else :
+#  print "Bi-Directional failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+#
+##clean up
+#del Puzzle.grids
+#Puzzle.grids = {}
+# ---------------------------------------------------------------------------  
+# Tests
 originalPuzzle = test
 
 Puzzle.grids = {}
 
-# Start Breadth First Search
-start = time.time()
-success, nodes = breadth(originalPuzzle)
-if success:
-  end = time.time()
-  print "BFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
-  if printMoves:
-    display(Puzzle.grids[solution], maximumMovesToShow)
-else :
-  end = time.time()
-  print "BFS failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-
-  
-#clean up
-del Puzzle.grids
-Puzzle.grids = {}
-
-# Start Depth First Search
-start = time.time()
-success, nodes = depth_limited(originalPuzzle, 100000) 
-if success:
-  end = time.time()
-  print "DFS solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
-  if printMoves:
-    display(Puzzle.grids[solution], maximumMovesToShow)
-else :
-  end = time.time()
-  print "DFS failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-
-#clean up
-del Puzzle.grids
-Puzzle.grids = {}
-
-# Start Depth Limited Search
-start = time.time()
-success, nodes = depth_limited(originalPuzzle, depthLimitedCap)
-end = time.time()
-if success:
-  print "Depth Limited solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
-  if printMoves:
-    display(Puzzle.grids[solution], maximumMovesToShow)
-else :
-  print "Depth Limited failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-  
-#clean up
-del Puzzle.grids
-Puzzle.grids = {}
-
-# Start Iterative Deepening Search
-start = time.time()
-success, nodes = iterative(originalPuzzle, -1)
-end = time.time()
-if success:
-  print "Iterative Deepening solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
-  if printMoves:
-    display(Puzzle.grids[solution], maximumMovesToShow)
-else :
-  print "Iterative Deepening failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-
-
-#clean up
-del Puzzle.grids
-Puzzle.grids = {}
-
-# Bi-Directional Search
-start = time.time()
-success, nodes = bidirectional(originalPuzzle, solution)
-end = time.time()
-if success:
-  print "Bi-Directional solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, getMoves(Puzzle.grids[solution], maximumMovesToShow))
-  if printMoves:
-    display(Puzzle.grids[solution], maximumMovesToShow)
-else :
-  print "Bi-Directional failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
-
-#clean up
-del Puzzle.grids
-Puzzle.grids = {}
-
-# Greedy
+# Greedy Manhattan
 start = time.time()
 success, nodes = aStar(originalPuzzle, manhattan, 0)
 end = time.time()
 if success :
-  print "Greedy solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  print "Greedy Manhattan solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
   if printMoves :
     display(Puzzle.grids[solution], maximumMovesToShow)
 else :
-  print "Greedy failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+  print "Greedy Manhattan failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
 
 del Puzzle.grids
 Puzzle.grids = {}
 
-# A*
+# Greedy Custom Heuristic
+start = time.time()
+success, nodes = aStar(originalPuzzle, customHeuristic1, 0)
+end = time.time()
+if success :
+  print "Greedy Custom Heuristic solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  if printMoves :
+    display(Puzzle.grids[solution], maximumMovesToShow)
+else :
+  print "Greedy Custom Heuristic failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+
+del Puzzle.grids
+Puzzle.grids = {}
+
+# A* Manhattan
 start = time.time()
 success, nodes = aStar(originalPuzzle, manhattan, 1)
 end = time.time()
 if success :
-  print "A* solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  print "A* Manhattan solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
   if printMoves :
     display(Puzzle.grids[solution], maximumMovesToShow)
 else :
-  print "A* failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+  print "A* Manhattan failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+
+  
+# A* Custom Heuristic
+start = time.time()
+success, nodes = aStar(originalPuzzle, customHeuristic1, 1)
+end = time.time()
+if success :
+  print "A* Custom Heuristic solution found!\n- Solution found in %s seconds\n- %s nodes searched\n- The solution takes %s moves"%(end - start, nodes, Puzzle.grids[solution].depth + 1)
+  if printMoves :
+    display(Puzzle.grids[solution], maximumMovesToShow)
+else :
+  print "A* Custom Heuristic failed to find solution. Ran for %s seconds and searched %s nodes"%(end - start, nodes)
+  
