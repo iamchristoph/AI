@@ -16,7 +16,7 @@ test = (0, 1, 3, 5, 7, 8, 6, 4, 2)
 # 642
 
 # True will print out all of the moves taken, while False will not show them. False is very useful for just seeing the program's report
-printMoves = False 
+printMoves = True 
 # Set to a different number to try a different limit for Depth Limited Search
 depthLimitedCap = 21 
 # If you want 
