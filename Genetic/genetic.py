@@ -4,7 +4,8 @@ import random
 import string
 
 POPULATION_SIZE = 1000
-MUTATION_RATE = 100 # represented as a percent
+MUTATION_RATE = 50 # represented as a percent
+CROSSOVER_RATE = 0.05
 
 # we should change this to be user input, or generate something random.
 target = "SKRa"
@@ -56,6 +57,16 @@ def getBreeder(i, population) :
   else :
     return population[i * 2]
 
+# crossover
+
+def crossover(boy, girl) :
+  point = random.choice(range(len(target)))
+  heir = boy[0:point] + girl[point:]
+  secondOffspring = girl[0:point] + boy[point:]
+  inbredHeir = boy[point:] + girl[0:point]
+  inbredSecond = girl[point:] + boy[0:point]
+  return [heir, secondOffspring, inbredHeir, inbredSecond]
+
 # mutate
 
 def mutate(candidate) :
@@ -102,6 +113,11 @@ while target not in pop :
 #  pop = tournamentSelection(pop)
 #  pop = tournamentSelection(pop)
   pop = tournamentSelection(pop)
+  sex = (int)(len(pop)* CROSSOVER_RATE)
+  choices = range(len(pop))
+  for i in range(sex) :
+    x, y = random.choice(choices), random.choice(choices)
+    pop += crossover(pop[x], pop[y])
 #  pop = tournamentSelection(pop)
   #print 'selection done'
   #printIt()
