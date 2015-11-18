@@ -4,11 +4,11 @@ import random
 import string
 
 POPULATION_SIZE = 1000
-MUTATION_RATE = 50 # represented as a percent
+MUTATION_RATE = 100 # represented as a percent
 CROSSOVER_RATE = 0.05
 
 # we should change this to be user input, or generate something random.
-target = "SKRa"
+target = "SkRa"
 
 # generate random population
 def getPopulation(length) :
@@ -42,7 +42,7 @@ def fitness(candidate) :
   fitNumber = 0
   for c in range(len(candidate)) :
     fitNumber -= abs(ord(target[c]) - ord(candidate[c])) * abs(ord(target[c]) - ord(candidate[c]))
-
+  return fitNumber
 
 # select from population to breed
 

@@ -9,7 +9,7 @@ MUTATION_RATE = 0.05 # represented as a percent
 #CROSSOVER_RATE = 0.05
 
 # we should change this to be user input, or generate something random.
-target = "Awesome"
+target = "SKRa"
 
 class mutt :
   def __init__(this, s=None) :
@@ -147,7 +147,7 @@ while target not in results :
     break
 
 print "Number of iterations: ", iters
-printIt()
+#printIt()
 #print "a", nextCharacter('a')
 #print "b, prev, ", prevCharacter('b')
 #print string.letters
