@@ -51,6 +51,65 @@ def tournamentSelection(population) :
   breedingPopulation = [getBreeder(i, population) for i in range (len(population)/2)]
   return breedingPopulation
 
+def fitnessProportionate(population):
+    candidateWeights = {}
+    lowestWeight = 1000
+    for candidate in population:
+        weight = fitness(candidate) 
+        candidateWeights[candidate] = weight
+        if weight < lowestWeight:
+            lowestWeight = weight
+            
+    weights = []
+    for c in candidateWeights.keys():
+        weights += [c] * (candidateWeights[c] - lowestWeight + 1)
+    
+    breedingPopulation = set([])
+    while len(breedingPopulation) < len(population)/2:
+        candidate = random.choice(weights)
+        breedingPopulation.add(candidate)
+        
+    return list(breedingPopulation)
+    
+    
+def rankedSelection(population):
+    # worst selection has a weight of 1, second worst weight of 2, best weight of N
+    population.sort(sortByRank)
+    
+    weights = []
+    currentWeight = 1
+    for c in population:
+        weights += [c] * currentWeight
+        currentWeight += 1
+    
+    breedingPopulation = set([])
+    while len(breedingPopulation) < len(population)/2:
+        candidate = random.choice(weights)
+        breedingPopulation.add(candidate)
+    return list(breedingPopulation)
+  
+def sortByRank(a, b):
+    aScore = 0
+    bScore = 0
+    for i in range(len(target)):
+        c = target[i]
+        if c in a:
+            aScore += 5
+            if a[i] == c:
+                aScore += 10
+        if c in b:
+            bScore += 5
+            if b[i] == c:
+                bScore += 10
+    
+    if aScore > bScore:
+        return 1
+    elif aScore == bScore:
+        return 0
+    else:
+        return -1
+    
+  
 def getBreeder(i, population) :
   if fitness(population[i]) > fitness(population[i * 2]) :
     return population[i]
@@ -106,13 +165,19 @@ def prevCharacter(c) :
 #printIt()
 iters = 0
 while target not in pop :
-  pop = tournamentSelection(pop)
-  pop = tournamentSelection(pop)
+# Fitness Proportionate
+  pop = fitnessProportionate(pop)
+  pop = fitnessProportionate(pop)
+  pop = fitnessProportionate(pop)
+# Ranked
+#  pop = rankedSelection(pop)
+#  pop = rankedSelection(pop)
+#  pop = rankedSelection(pop)
+# Tournament  
 #  pop = tournamentSelection(pop)
 #  pop = tournamentSelection(pop)
 #  pop = tournamentSelection(pop)
-#  pop = tournamentSelection(pop)
-  pop = tournamentSelection(pop)
+  
   sex = (int)(len(pop)* CROSSOVER_RATE)
   choices = range(len(pop))
   for i in range(sex) :
@@ -124,11 +189,6 @@ while target not in pop :
   pop += [mutate(x) for x in pop]
   pop += [mutate(x) for x in pop]
   pop += [mutate(x) for x in pop]
-#  pop += [mutate(x) for x in pop]
-#  pop += [mutate(x) for x in pop]
-#  pop += [mutate(x) for x in pop]
-#  pop += [mutate(x) for x in pop]
-#  pop += [mutate(x) for x in pop]
   #printIt()
   iters +=1
 
