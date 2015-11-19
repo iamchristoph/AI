@@ -164,19 +164,18 @@ def prevCharacter(c) :
 
 #printIt()
 iters = 0
+
+repeatMutate = 1
+repeatSelect = 1
+#selector = tournamentSelection
+selector = fitnessProportionate
+#selector = rankedSelection
+
+
 while target not in pop :
-# Fitness Proportionate
-  pop = fitnessProportionate(pop)
-  pop = fitnessProportionate(pop)
-  pop = fitnessProportionate(pop)
-# Ranked
-#  pop = rankedSelection(pop)
-#  pop = rankedSelection(pop)
-#  pop = rankedSelection(pop)
-# Tournament  
-#  pop = tournamentSelection(pop)
-#  pop = tournamentSelection(pop)
-#  pop = tournamentSelection(pop)
+
+  for i in range(repeatSelect):
+    pop = selector(pop)
   
   sex = (int)(len(pop)* CROSSOVER_RATE)
   choices = range(len(pop))
@@ -186,9 +185,10 @@ while target not in pop :
 #  pop = tournamentSelection(pop)
   #print 'selection done'
   #printIt()
-  pop += [mutate(x) for x in pop]
-  pop += [mutate(x) for x in pop]
-  pop += [mutate(x) for x in pop]
+  
+  for i in range(repeatMutate):
+    pop += [mutate(x) for x in pop]
+    
   #printIt()
   iters +=1
 
