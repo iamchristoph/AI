@@ -4,7 +4,7 @@ import random
 import string
 
 GENERATIONS = 10000
-POPULATION_SIZE = 100
+POPULATION_SIZE = 1000
 MUTATION_RATE = 0.05 # represented as a percent
 #CROSSOVER_RATE = 0.05
 

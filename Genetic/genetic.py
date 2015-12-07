@@ -165,10 +165,10 @@ def prevCharacter(c) :
 #printIt()
 iters = 0
 
-repeatMutate = 1
-repeatSelect = 1
-#selector = tournamentSelection
-selector = fitnessProportionate
+repeatMutate = 2
+repeatSelect = 2
+selector = tournamentSelection
+#selector = fitnessProportionate
 #selector = rankedSelection
 
 
