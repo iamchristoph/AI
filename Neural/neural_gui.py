@@ -36,13 +36,18 @@ def getString() :
   for y in range(9) :
     for x in range(8) :
       chars.append(pic[y][x].value)
-  chars.append(' ' + userEntry.get() + '\n')
-  return ''.join(chars);
+  target = userEntry.get()
+  if target :    
+    chars.append(' ' + userEntry.get() + '\n')
+    return ''.join(chars);
+  else :
+    tkMessageBox.showinfo("Error", 'you must enter a number')
 
 def storeData( ) :
   strVal = getString()
-  with open('training_example.dat', 'a') as myfile :
-    myfile.write(strVal)
+  if strVal :
+    with open('training_example.dat', 'a') as myfile :
+      myfile.write(strVal)
 
 
 pic = []
