@@ -47,7 +47,7 @@ class perceptron :
 
 perceptrons = []
 for x in range(NUMBER) :
-  for y in range(5) :
+  for y in range(5) : 
     perceptrons.append(perceptron(x+1))
 
 
@@ -62,6 +62,9 @@ limit = 20
 while perceptrons[0].changed is True or limit:
   for p in perceptrons :
     #print p.target, p.output
+    
+    # Shuffle the training examples
+    random.shuffle(texamples)
     for ex in texamples :
       p.train(ex[0], int(ex[1]))
 
