@@ -8,12 +8,13 @@ width = 8
 
 top = Tkinter.Tk('Perceptron Array Lab', )
 canvas = Tkinter.Canvas(top, bg = 'black', height = height, width = width)
+pFrame = Tkinter.Frame(top)
+pFrame.pack(side = 'left')
 picFrame = Tkinter.Frame(top)
 picFrame.pack()
 exFrame = Tkinter.Frame(top)
 exFrame.pack()
-pFrame = Tkinter.Frame(top)
-pFrame.pack(side = 'left')
+nnetwork = neural.neuralnetwork()
 
 class colorChangeButton :
   def __init__(this, b) :
@@ -34,7 +35,7 @@ def evaluateInput() :
     t_Val = strVal.split()
     #results = [0,0,0,0,0, 0]
     results = [0] * len(neural.NUMBERS) # Will adapt to match the 
-    for p in neural.perceptrons :
+    for p in nnetwork.perceptrons :
       results[p.target] += p.evaluate(t_Val[0])
    
   output = ""
@@ -88,8 +89,13 @@ def storeData( ) :
   userEntry.delete(0, 'end')
   
 def trainPerceptrons() :
-  neural.train(5)
+  nnetwork.train(5)
 
+def savePerceptrons() :
+  nnetwork.save()
+
+def loadPerceptrons() :
+  nnetwork.load()
 
 pic = []
 for y in range(height) :
@@ -108,5 +114,10 @@ userEntry = Tkinter.Entry(exFrame, width=1, font=16)
 userEntry.grid(row=0, column=3)
 trainButton = Tkinter.Button(pFrame, bg='green', text='Train', command=trainPerceptrons)
 trainButton.pack()
+saveButton = Tkinter.Button(pFrame, bg='blue', text='Save', command=savePerceptrons)
+saveButton.pack()
+loadButton = Tkinter.Button(pFrame, bg='red', text='Load', command=loadPerceptrons)
+loadButton.pack()
+
 
 top.mainloop()

@@ -2,9 +2,10 @@
 
 import sys
 import random
+import pickle
 
 SIZE = 72
-ETA = 0.02
+ETA = 0.01
 NUMBERS = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
 t_ex = '000110000001100000011000000110000001100000011000000110000001100000011000'
@@ -45,11 +46,6 @@ class perceptron :
     return this.output
 
 
-perceptrons = []
-for x in NUMBERS :
-  for y in range(5) : 
-    perceptrons.append(perceptron(x))
-
 
 texamples = []
 with open('training_example.dat', 'r') as myfile :
@@ -58,11 +54,25 @@ with open('training_example.dat', 'r') as myfile :
 
 # Shuffle the training examples
 random.shuffle(texamples)
+class neuralnetwork :
+  def __init__(this) :
+    this.perceptrons = []
+    for x in NUMBERS :
+      for y in range(5) : 
+        this.perceptrons.append(perceptron(x))
 
-def train(l) :
-  limit = l
-  while limit :
-    for p in perceptrons :
-      for ex in texamples :
-        p.train(ex[0], int(ex[1]))
-    limit -= 1
+  def train(this, l) :
+    limit = l
+    while limit :
+      for p in this.perceptrons :
+        for ex in texamples :
+          p.train(ex[0], int(ex[1]))
+      limit -= 1
+
+  def save(this) :  
+    pickle.dump(this.perceptrons, open('save.p', 'w'))
+
+  def load(this) :  
+    print this.perceptrons
+    this.perceptrons = pickle.load(open('save.p', 'r'))
+    print this.perceptrons
