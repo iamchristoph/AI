@@ -5,7 +5,7 @@ import random
 
 SIZE = 72
 ETA = 0.02
-NUMBER = 5
+NUMBERS = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
 t_ex = '000110000001100000011000000110000001100000011000000110000001100000011000'
 t_ex1 = '001100000011000000110000001100000011000000110000001100000011000000110000'
@@ -46,9 +46,9 @@ class perceptron :
 
 
 perceptrons = []
-for x in range(NUMBER) :
+for x in NUMBERS :
   for y in range(5) : 
-    perceptrons.append(perceptron(x+1))
+    perceptrons.append(perceptron(x))
 
 
 texamples = []
@@ -56,15 +56,15 @@ with open('training_example.dat', 'r') as myfile :
     for line in myfile :
       texamples.append(line.split())
 
+# Shuffle the training examples
+random.shuffle(texamples)
 
-
-limit = 20
+limit = 30
 while perceptrons[0].changed is True or limit:
   for p in perceptrons :
     #print p.target, p.output
     
-    # Shuffle the training examples
-    random.shuffle(texamples)
+    
     for ex in texamples :
       p.train(ex[0], int(ex[1]))
 

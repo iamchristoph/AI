@@ -28,25 +28,26 @@ class colorChangeButton :
 
 def evaluateInput() :
   strVal = getString();
-  t_Val = strVal.split()
-  #results = [0,0,0,0,0, 0]
-  results = [0] * ((len(neural.perceptrons) / neural.NUMBER) + 1) # Will adapt to match the 
-  for p in neural.perceptrons :
-    results[p.target] += p.evaluate(t_Val[0])
+  if strVal :
+    t_Val = strVal.split()
+    #results = [0,0,0,0,0, 0]
+    results = [0] * len(neural.NUMBERS) # Will adapt to match the 
+    for p in neural.perceptrons :
+      results[p.target] += p.evaluate(t_Val[0])
    
   output = ""
   bestResult = 0
-  for i in range(1,len(results)):
+  for i in range(len(results)):
     output += "\nsum %s's = %s"%(i, results[i])
     if results[i] > bestResult:
       bestResult = results[i]
       
   decision = ""
-  if bestResult == 0:
+  if bestResult < -4:
     decision = "Undetermined"
   else:
     accepted = []
-    for i in range(1, len(results)):
+    for i in range(len(results)):
       if results[i] == bestResult:
         accepted.append("%s"%i)
     decision = " or ".join(accepted)
@@ -73,13 +74,13 @@ def getString() :
   target = userEntry.get()
   if target :    
     chars.append(' ' + userEntry.get() + '\n')
-    return ''.join(chars);
+    return ''.join(chars)
   else :
-    tkMessageBox.showinfo("Error", 'you must enter a number')
+    return ''.join(chars)
 
 def storeData( ) :
   strVal = getString()
-  if strVal :
+  if len(strVal) > neural.SIZE :
     with open('training_example.dat', 'a') as myfile :
       myfile.write(strVal)
 
