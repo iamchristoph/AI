@@ -12,6 +12,8 @@ picFrame = Tkinter.Frame(top)
 picFrame.pack()
 exFrame = Tkinter.Frame(top)
 exFrame.pack()
+pFrame = Tkinter.Frame(top)
+pFrame.pack(side = 'left')
 
 class colorChangeButton :
   def __init__(this, b) :
@@ -85,6 +87,9 @@ def storeData( ) :
       myfile.write(strVal)
   userEntry.delete(0, 'end')
   
+def trainPerceptrons() :
+  neural.train(5)
+
 
 pic = []
 for y in range(height) :
@@ -94,12 +99,14 @@ for y in range(height) :
     pic[y][x].button.grid(row=y, column=x)
 
 evalButton = Tkinter.Button(exFrame, bg='green', text='Evaluate', command=evaluateInput)
-evalButton.grid(row=0, column=0);
+evalButton.grid(row=0, column=0)
 clearButton = Tkinter.Button(exFrame, bg='red', text='Clear', command=clearInput)
 clearButton.grid(row=0, column=1)
 storeButton = Tkinter.Button(exFrame, bg='blue', text='Store', command=storeData)
 storeButton.grid(row=0, column=2)
-userEntry = Tkinter.Entry(exFrame, width=1)
+userEntry = Tkinter.Entry(exFrame, width=1, font=16)
 userEntry.grid(row=0, column=3)
+trainButton = Tkinter.Button(pFrame, bg='green', text='Train', command=trainPerceptrons)
+trainButton.pack()
 
 top.mainloop()

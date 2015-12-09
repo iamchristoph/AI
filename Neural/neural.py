@@ -59,28 +59,10 @@ with open('training_example.dat', 'r') as myfile :
 # Shuffle the training examples
 random.shuffle(texamples)
 
-limit = 30
-while perceptrons[0].changed is True or limit:
-  for p in perceptrons :
-    #print p.target, p.output
-    
-    
-    for ex in texamples :
-      p.train(ex[0], int(ex[1]))
-
-#  p1.train(t_ex, 1)
-#  print int(p.output)
-#  p1.train(t_ex1, 1)
-#  print int(p1.output)
-#  p1.train(t_ex2, 1)
-#  print int(p1.output)
-#  p1.train(t_ex3, 0)
-#  print int(p1.output)
-#  p1.train(t_ex4, 1)
-  limit -= 1
-
-#print int(p1.evaluate(t_ex4))
-
-#print int(p1.evaluate(t_ex1))
-#print int(p1.evaluate(t_ex2))
-#print int(p1.evaluate(t_ex3))
+def train(l) :
+  limit = l
+  while limit :
+    for p in perceptrons :
+      for ex in texamples :
+        p.train(ex[0], int(ex[1]))
+    limit -= 1
