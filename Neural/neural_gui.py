@@ -36,7 +36,7 @@ def evaluateInput() :
       results[p.target] += p.evaluate(t_Val[0])
    
   output = ""
-  bestResult = 0
+  bestResult = -5
   for i in range(len(results)):
     output += "\nsum %s's = %s"%(i, results[i])
     if results[i] > bestResult:
@@ -83,7 +83,8 @@ def storeData( ) :
   if len(strVal) > neural.SIZE :
     with open('training_example.dat', 'a') as myfile :
       myfile.write(strVal)
-
+  userEntry.delete(0, 'end')
+  
 
 pic = []
 for y in range(height) :
